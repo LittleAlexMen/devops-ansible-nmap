@@ -1,0 +1,4 @@
+moodle-epos.permkrai.ru
+www.psu.ru
+fact.com
+8.8.8.8

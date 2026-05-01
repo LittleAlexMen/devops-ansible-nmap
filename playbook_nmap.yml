@@ -1,0 +1,23 @@
+---
+- name: Install and run nmap scan on managed nodes
+  hosts: webservers
+  become: yes
+  become_method: sudo
+  remote_user: alex
+
+  tasks:
+    - name: Install nmap
+      ansible.builtin.apt:
+        name: nmap
+        state: present
+        update_cache: yes
+
+    - name: Scan each target (loop over lines in targets.txt)
+      ansible.builtin.shell: "nmap {{ item }} -p 80 -oG -"
+      loop: "{{ lookup('file', './targets.txt').splitlines() }}"
+      register: scan_results
+
+    - name: Show scan results
+      ansible.builtin.debug:
+        msg: "Results for {{ item.item }}:\n{{ item.stdout }}"
+      loop: "{{ scan_results.results }}"
